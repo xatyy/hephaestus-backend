@@ -12,8 +12,12 @@ router.put("/:id", verifyTokenAndAuthority, async (req, res) => {
     }
   
     try {
-        if(req.body.isAdmin.length != 0){
-            if(req.user.isAdmin && req.body){
+      console.log(req.user.isAdmin);
+
+      if(req.body.isAdmin && !req.user.isAdmin){
+          throw "Not allowed";
+      }
+      
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
@@ -22,8 +26,7 @@ router.put("/:id", verifyTokenAndAuthority, async (req, res) => {
         { new: true }
       );
       res.status(200).json(updatedUser);
-    }
-}
+
     } catch (err) {
       res.status(500).json(err);
     }
